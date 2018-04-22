@@ -5,8 +5,8 @@
 CXX = g++
 #Set compiler  flags
 CXXFLAGS = -Wall -g
-CPPFLAGS = -I/scratch/Perkins/include
-LDFLAGS = -L/scratch/Perkins/lib
+CPPFLAGS = -I/scratch/perkins/include
+LDFLAGS = -L/scratch/perkins/lib
 LDLIBS = -lcdk -lcurses
 PROJECTNAME = CS3377.Program6
 EXECFILE = Program6
@@ -17,7 +17,7 @@ OBJS = main.o
 all: $(EXECFILE)
 
 clean:
-	rm -f $(OBJS)  *~ \#*
+	rm -f $(OBJS) $(EXECFILE) *~ \#*
 
 $(EXECFILE): $(OBJS)
 	$(CXX) -o $@ $(OBJS) $(LDFLAGS) $(LDLIBS)

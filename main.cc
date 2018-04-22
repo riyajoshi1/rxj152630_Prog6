@@ -5,15 +5,15 @@
  Homework6 : GIT Repository and Binary File I/O
  */
 
-#include "header.h"
+
 #include <iostream>
 #include "cdk.h"
-
+#include "header.h"
 
 #define MATRIX_WIDTH 3
 #define MATRIX_HEIGHT 5
 #define BOX_WIDTH 15
-#define MATRIX_NAME_STRING "Test Matrix"
+#define MATRIX_NAME_STRING "Binary File Contents"
 
 using namespace std;
 
@@ -71,6 +71,7 @@ int main()
   /*
    * Dipslay a message
    */
+  //displays message in 2nd row 2nd col 
   setCDKMatrixCell(myMatrix, 2, 2, "Test Message");
   drawCDKMatrix(myMatrix, true);    /* required  */
 
