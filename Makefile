@@ -4,7 +4,7 @@
 # Homework 6 : GIT Repository and Binary File I/O
 CXX = g++
 #Set compiler  flags
-CXXFLAGS = -Wall
+CXXFLAGS = -Wall -g
 CPPFLAGS = -I/scratch/Perkins/include
 LDFLAGS = -L/scratch/Perkins/lib
 LDLIBS = -lcdk -lcurses
@@ -20,7 +20,7 @@ clean:
 	rm -f $(OBJS)  *~ \#*
 
 $(EXECFILE): $(OBJS)
-	$(CXX) -static -o $@ $(OBJS) $(LDFLAGS) $(LDLIBS)
+	$(CXX) -o $@ $(OBJS) $(LDFLAGS) $(LDLIBS)
 backup:
 	@make clean
 	@mkdir -p ~/backups; chmod 700 ~/backups
