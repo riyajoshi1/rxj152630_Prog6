@@ -10,7 +10,7 @@ LDFLAGS = -L/scratch/perkins/lib
 LDLIBS = -lcdk -lcurses
 PROJECTNAME = CS3377.Program6
 EXECFILE = Program6
-OBJS = mainprocess.o 
+OBJS = main.o 
 
 #$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -O $< -o $@
 
