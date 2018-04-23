@@ -1,6 +1,6 @@
 #include <stdint.h>
 const int maxRecordStringLength = 25;
-class BinaryHeader
+class BinaryFileHeader
 {
 	public:
 	uint32_t magicNumber;

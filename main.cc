@@ -4,21 +4,30 @@
  CS 3377
  Homework6 : GIT Repository and Binary File I/O
  */
-
-
+#include<stdlib.h>
+#include<stdio.h>
+#include<sstream>
+#include<string.h>
 #include <iostream>
 #include "cdk.h"
 #include "header.h"
-
+#include <fstream>
 #define MATRIX_WIDTH 3
 #define MATRIX_HEIGHT 5
-#define BOX_WIDTH 15
+#define BOX_WIDTH 30
 #define MATRIX_NAME_STRING "Binary File Contents"
 
 using namespace std;
 
 int main()
 {
+  ifstream fin;
+  fin.open("cs3377.bin",ios::in|ios::binary);
+  if(!fin.is_open())
+  {
+  	cout<<"ERROR : Cannot open binary file"<<endl;
+	return -1;
+  }
 
   WINDOW	*window;
   CDKSCREEN	*cdkscreen;
@@ -71,8 +80,40 @@ int main()
   /*
    * Dipslay a message
    */
-  //displays message in 2nd row 2nd col 
-  setCDKMatrixCell(myMatrix, 2, 2, "Test Message");
+  BinaryFileHeader *header = new BinaryFileHeader();
+  fin.read((char*)header,sizeof(BinaryFileHeader));
+  char buffer[65];
+  int row = 1;
+  int col = 1;
+  char result[65];
+  sprintf(buffer,"%X",header->magicNumber);//hexa decimal FEEDFACE now converted to "FEEDFACE"
+  strcpy(result,"Magic: 0x");
+  strcat(result,buffer);
+  setCDKMatrixCell(myMatrix,row,col,result);//1,1
+  col++;
+  sprintf(buffer,"%d",header->versionNumber);//decimal 16 stored as "16"
+  strcpy(result,"Version: ");
+  strcat(result,buffer);
+  setCDKMatrixCell(myMatrix,row,col,result);//1,2
+  col++;
+  sprintf(buffer,"%lu",header->numRecords);//decimal 4 stored as "4"
+  strcpy(result,"NumRecords: ");
+  strcat(result,buffer);
+  setCDKMatrixCell(myMatrix,row,col,result);//1,3
+
+  BinaryFileRecord *record = new BinaryFileRecord();
+  while(fin.read((char*)record,sizeof(BinaryFileRecord)))
+  {
+  	row ++;//2,3,4,5
+	col =1;
+  	sprintf(buffer,"%d",record->strLength);
+	strcpy(result,"strlen: ");
+	strcat(result,buffer);
+  	setCDKMatrixCell(myMatrix,row,col,result);//(2,1),(3,1),(4,1),(5,1)
+	col++;//2
+	setCDKMatrixCell(myMatrix,row,col,record->stringBuffer);//(2,2),(3,2),(4,2),(5,2)
+
+ }
   drawCDKMatrix(myMatrix, true);    /* required  */
 
   /* So we can see results, pause until a key is pressed. */
