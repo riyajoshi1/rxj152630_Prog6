@@ -1,6 +1,7 @@
 /*
  Submitted By:
  Riya Joshi
+ rxj152630@utdallas.edu
  CS 3377
  Homework6 : GIT Repository and Binary File I/O 
 */

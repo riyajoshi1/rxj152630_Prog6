@@ -1,3 +1,9 @@
+/*Submitted By:
+Riya Joshi
+CS 3377
+rxj152630@utdallas.edu
+Homework6: GIT Repository and Binary File I/O
+*/
 #include <stdint.h>
 const int maxRecordStringLength = 25;
 class BinaryFileHeader
