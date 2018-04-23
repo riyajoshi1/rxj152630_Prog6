@@ -2,8 +2,8 @@
  Submitted By:
  Riya Joshi
  CS 3377
- Homework6 : GIT Repository and Binary File I/O
- */
+ Homework6 : GIT Repository and Binary File I/O 
+*/
 #include<stdlib.h>
 #include<stdio.h>
 #include<sstream>
@@ -12,6 +12,7 @@
 #include "cdk.h"
 #include "header.h"
 #include <fstream>
+//5 rows 3 cols matrix
 #define MATRIX_WIDTH 3
 #define MATRIX_HEIGHT 5
 #define BOX_WIDTH 30
@@ -22,7 +23,7 @@ using namespace std;
 int main()
 {
   ifstream fin;
-  fin.open("cs3377.bin",ios::in|ios::binary);
+  fin.open("cs3377.bin",ios::in|ios::binary);//open binary file
   if(!fin.is_open())
   {
   	cout<<"ERROR : Cannot open binary file"<<endl;
@@ -41,14 +42,12 @@ int main()
   // values you choose to set for MATRIX_WIDTH and MATRIX_HEIGHT
   // above.
 
-  //example : 3X4 matrix
-  //const char 		*rowTitles[] = {"R0", "R1", "R2", "R3", "R4", "R5"};
-  //const char 		*columnTitles[] = {"C0", "C1", "C2", "C3", "C4", "C5"};
+  
   //5x3 matrix 5 rows 3 cols
   const char *rowTitles[] = {"R0","a","b","c","d","e"};
   const char *columnTitles[] = {"C0","a","b","c","d","e"}; 
-  int		boxWidths[] = {BOX_WIDTH, BOX_WIDTH, BOX_WIDTH, BOX_WIDTH, BOX_WIDTH, BOX_WIDTH};
-  int		boxTypes[] = {vMIXED, vMIXED, vMIXED, vMIXED,  vMIXED,  vMIXED};
+  int boxWidths[] = {BOX_WIDTH, BOX_WIDTH, BOX_WIDTH, BOX_WIDTH, BOX_WIDTH, BOX_WIDTH};
+  int boxTypes[] = {vMIXED, vMIXED, vMIXED, vMIXED,  vMIXED,  vMIXED};
 
   /*
    * Initialize the Cdk screen.
@@ -74,44 +73,48 @@ int main()
       _exit(1);
     }
 
-  /* Display the Matrix */
-  drawCDKMatrix(myMatrix, true);
+  //set matrix cells and then display the matrix
 
-  /*
-   * Dipslay a message
-   */
+  //Start reading binary file
+  //first line of binary file holds a BinaryFileHeader, so read that outside the loop
   BinaryFileHeader *header = new BinaryFileHeader();
-  fin.read((char*)header,sizeof(BinaryFileHeader));
+  fin.read((char*)header,sizeof(BinaryFileHeader));//reading Binary File Header into header
   char buffer[65];
   int row = 1;
   int col = 1;
   char result[65];
-  sprintf(buffer,"%X",header->magicNumber);//hexa decimal FEEDFACE now converted to "FEEDFACE"
+  sprintf(buffer,"%X",header->magicNumber);//hexa decimal FEEDFACE(header->magicNumber)  now converted to "FEEDFACE" and held in buffer
   strcpy(result,"Magic: 0x");
-  strcat(result,buffer);
-  setCDKMatrixCell(myMatrix,row,col,result);//1,1
-  col++;
-  sprintf(buffer,"%d",header->versionNumber);//decimal 16 stored as "16"
+  strcat(result,buffer);//result now holds "Magic: 0xFEEDFACE"
+  setCDKMatrixCell(myMatrix,row,col,result);//set matrix cell (1,1) as "Magic: 0xFEEDFACE"
+  col++;//2
+  //32 bit so %d
+  sprintf(buffer,"%d",header->versionNumber);//16 stored as "16" in buffer
   strcpy(result,"Version: ");
-  strcat(result,buffer);
-  setCDKMatrixCell(myMatrix,row,col,result);//1,2
-  col++;
-  sprintf(buffer,"%lu",header->numRecords);//decimal 4 stored as "4"
+  strcat(result,buffer);//result now holds "Version: 16"
+  setCDKMatrixCell(myMatrix,row,col,result);//set matrix cell (1,2) as result
+  col++;//3
+  //64 bit so %lu
+  sprintf(buffer,"%lu",header->numRecords);//4 stored as "4"
   strcpy(result,"NumRecords: ");
-  strcat(result,buffer);
-  setCDKMatrixCell(myMatrix,row,col,result);//1,3
+  strcat(result,buffer);//result holds "NumRecords: 4"
+  setCDKMatrixCell(myMatrix,row,col,result);//set matrix cell (1,3) as result
 
+  //The next lines of Binary File are full of BinaryFileRecords
+  //NumRecords is the number of Binary File Records to be read
   BinaryFileRecord *record = new BinaryFileRecord();
-  while(fin.read((char*)record,sizeof(BinaryFileRecord)))
+  while(fin.read((char*)record,sizeof(BinaryFileRecord)))//keep reading the file as long as there is Binary File Record to be read inside the file
   {
+  	//after reading the Binary File record set the matrix cells
   	row ++;//2,3,4,5
 	col =1;
-  	sprintf(buffer,"%d",record->strLength);
+	//8 bit so %d
+  	sprintf(buffer,"%d",record->strLength);//convert length to " " format
 	strcpy(result,"strlen: ");
 	strcat(result,buffer);
-  	setCDKMatrixCell(myMatrix,row,col,result);//(2,1),(3,1),(4,1),(5,1)
+  	setCDKMatrixCell(myMatrix,row,col,result);//set (2,1),(3,1),(4,1),(5,1) with "strlen: record->strLength"
 	col++;//2
-	setCDKMatrixCell(myMatrix,row,col,record->stringBuffer);//(2,2),(3,2),(4,2),(5,2)
+	setCDKMatrixCell(myMatrix,row,col,record->stringBuffer);//set (2,2),(3,2),(4,2),(5,2) with "record->stringBuffer"
 
  }
   drawCDKMatrix(myMatrix, true);    /* required  */
